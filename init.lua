@@ -143,7 +143,10 @@ require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'mg979/vim-visual-multi', -- select multiple search words at once.
-  'numToStr/Comment.nvim', -- "gc" to comment visual regions/lines
+  { -- "gc" to comment visual regions/lines
+    'numToStr/Comment.nvim',
+    opts = {}, -- this is needed to force load Comment.nvim
+  },
   {
     'nvim-tree/nvim-tree.lua',
     version = '*',
