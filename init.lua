@@ -1,98 +1,38 @@
---[[
-
-  Next, run AND READ `:help`.
-    This will open up a help window with some basic information
-    about reading, navigating and searching the builtin help documentation.
-
-    This should be the first place you go to look when you're stuck or confused
-    with something. It's one of my favorite neovim features.
-
-    MOST IMPORTANTLY, we provide a keymap "<space>sh" to [s]earch the [h]elp documentation,
-    which is very useful when you're not sure exactly what you're looking for.
-
-  I have left several `:help X` comments throughout the init.lua
-    These are hints about where to find more information about the relevant settings,
-    plugins or neovim features used in kickstart.
-
-   NOTE: Look for lines like this
-
-    Throughout the file. These are for you, the reader, to help understand what is happening.
-    Feel free to delete them once you know what you're doing, but they should serve as a guide
-    for when you are first encountering a few different constructs in your nvim config.
-
-If you experience any errors while trying to install kickstart, run `:checkhealth` for more info
-
---]]
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.g.loaded_netrw = 1 -- NvimTree -- Disable netrw
+vim.g.loaded_netrwPlugin = 1 -- NvimTree -- Disable netrw
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
-
--- Make line numbers default
-vim.opt.number = true
--- You can also add relative line numbers, for help with jumping.
---  Experiment for yourself to see if you like it!
-vim.opt.relativenumber = true
-
--- Enable mouse mode, can be useful for resizing splits for example!
-vim.opt.mouse = 'a'
-
--- Don't show the mode, since it's already in status line
-vim.opt.showmode = false
-
--- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.opt.clipboard = 'unnamedplus'
-
--- Enable break indent
-vim.opt.breakindent = true
-
--- Save undo history
-vim.opt.undofile = true
-
--- Case-insensitive searching UNLESS \C or capital in search
+vim.opt.number = true -- Make line numbers default
+vim.opt.relativenumber = true -- You can also add relative line numbers, for help with jumping.
+vim.opt.mouse = 'a' -- Enable mouse mode, can be useful for resizing splits for example!
+vim.opt.showmode = false -- Don't show the mode, since it's already in status line
+vim.opt.clipboard = 'unnamedplus' -- Sync clipboard between OS and Neovim. Remove this option if you want your OS clipboard to remain independent.
+vim.opt.breakindent = true -- Enable break indent
+vim.opt.undofile = true -- Save undo history
 vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
--- Keep signcolumn on by default
-vim.opt.signcolumn = 'yes'
-
--- Decrease update time
-vim.opt.updatetime = 250
+vim.opt.smartcase = true -- Case-insensitive searching UNLESS \C or capital in search
+vim.opt.signcolumn = 'yes' -- Keep signcolumn on by default
+vim.opt.updatetime = 250 -- Decrease update time
 vim.opt.timeoutlen = 300
-
--- Configure how new splits should be opened
-vim.opt.splitright = true
+vim.opt.splitright = true -- Configure how new splits should be opened
 vim.opt.splitbelow = true
-
--- Sets how neovim will display certain whitespace in the editor.
---  See `:help 'list'`
---  and `:help 'listchars'`
-vim.opt.list = true
+vim.opt.list = true -- Sets how neovim will display certain whitespace in the editor.
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-
--- Preview substitutions live, as you type!
-vim.opt.inccommand = 'split'
-
--- Show which line your cursor is on
--- vim.opt.cursorline = true
-
--- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.inccommand = 'split' -- Preview substitutions live, as you type!
+-- vim.opt.cursorline = true -- Show which line your cursor is on
+vim.opt.scrolloff = 10 -- Minimal number of screen lines to keep above and below the cursor.
+vim.opt.hlsearch = true -- Set highlight on search, but clear on pressing <Esc> in normal mode
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
-
--- Set highlight on search, but clear on pressing <Esc> in normal mode
-vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
@@ -137,18 +77,16 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+vim.api.nvim_create_autocmd('ColorScheme', {
+  pattern = '*',
+  callback = function()
+    vim.api.nvim_set_hl(0, 'EyelinerPrimary', { bold = true, underline = true })
+  end,
+})
 
--- [[ Install `lazy.nvim` plugin manager ]]
---    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
-local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
-  local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
-  vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
-end ---@diagnostic disable-next-line: undefined-field
-vim.opt.rtp:prepend(lazypath)
-
--- Add a 'Format' command to use for manual formatting using conform.nvim
-vim.api.nvim_create_user_command('Format', function(args)
+-- [[ User Commands ]]
+--  This can be invoked by pressing `:` followed by the command
+vim.api.nvim_create_user_command('Format', function(args) -- Add a 'Format' command to use for manual formatting using conform.nvim
   local range = nil
   if args.count ~= -1 then
     local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
@@ -159,9 +97,7 @@ vim.api.nvim_create_user_command('Format', function(args)
   end
   require('conform').format { async = true, lsp_fallback = true, range = range }
 end, { range = true })
-
--- Add a toggle command to toggle formatting using conform.nvim
-vim.api.nvim_create_user_command('FormatDisable', function(args)
+vim.api.nvim_create_user_command('FormatDisable', function(args) -- Add a toggle command to toggle formatting using conform.nvim
   if args.bang then
     -- FormatDisable! will disable formatting just for this buffer
     vim.b.disable_autoformat = true
@@ -172,14 +108,13 @@ end, {
   desc = 'Disable autoformat-on-save',
   bang = true,
 })
-vim.api.nvim_create_user_command('FormatEnable', function()
+vim.api.nvim_create_user_command('FormatEnable', function() -- Add a toggle command to toggle formatting using conform.nvim
   vim.b.disable_autoformat = false
   vim.g.disable_autoformat = false
 end, {
   desc = 'Re-enable autoformat-on-save',
 })
-
-vim.api.nvim_create_user_command('OrganizeImports', function()
+vim.api.nvim_create_user_command('OrganizeImports', function() -- Organize imports in typescript projects
   local params = {
     command = '_typescript.organizeImports',
     arguments = { vim.api.nvim_buf_get_name(0) },
@@ -190,39 +125,44 @@ end, {
   desc = 'Auto sort typescript imports',
 })
 
+-- [[ Install `lazy.nvim` plugin manager ]]
+--    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
+local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+  local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
+  vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
+end ---@diagnostic disable-next-line: undefined-field
+vim.opt.rtp:prepend(lazypath)
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
 --    :Lazy
 --
---  You can press `?` in this menu for help. Use `:q` to close the window
---
---  To update plugins, you can run
---    :Lazy update
---
--- NOTE: Here is where you install your plugins.
 require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'mg979/vim-visual-multi', -- select multiple search words at once.
-
-  -- NOTE: Plugins can also be added by using a table,
-  -- with the first argument being the link and the following
-  -- keys can be used to configure plugin behavior/loading/etc.
-  --
-  -- Use `opts = {}` to force a plugin to be loaded.
-  --
-  --  This is equivalent to:
-  --    require('Comment').setup({})
-
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
-
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`. This is equivalent to the following lua:
-  --    require('gitsigns').setup({ ... })
-  --
-  -- See `:help gitsigns` to understand what the configuration keys do
+  'numToStr/Comment.nvim', -- "gc" to comment visual regions/lines
+  {
+    'nvim-tree/nvim-tree.lua',
+    version = '*',
+    lazy = false,
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      require('nvim-tree').setup {
+        vim.keymap.set('n', '<leader><leader>', '<cmd>NvimTreeToggle<CR>', { desc = 'Open tree toggle' }),
+        renderer = {
+          group_empty = true,
+        },
+        filters = {
+          dotfiles = false,
+        },
+      }
+    end,
+  },
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -235,30 +175,21 @@ require('lazy').setup {
       },
     },
   },
-
-  -- NOTE: Plugins can also be configured to run lua code when they are loaded.
-  --
-  -- This is often very useful to both group configuration, as well as handle
-  -- lazy loading plugins that don't need to be loaded immediately at startup.
-  --
-  -- For example, in the following configuration, we use:
-  --  event = 'VimEnter'
-  --
-  -- which loads which-key before all the UI elements are loaded. Events can be
-  -- normal autocommands events (`:help autocmd-events`).
-  --
-  -- Then, because we use the `config` key, the configuration only runs
-  -- after the plugin has been loaded:
-  --  config = function() ... end
-
+  { -- Easy horizontal traversal
+    'jinh0/eyeliner.nvim',
+    config = function()
+      require('eyeliner').setup {
+        highlight_on_key = true, -- show highlights only after keypress
+        dim = true, -- dim all other characters if set to true (recommended!)
+      }
+    end,
+  },
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
       require('which-key').setup()
-
-      -- Document existing key chains
-      require('which-key').register {
+      require('which-key').register { -- Document existing key chains
         ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
         ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
         ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
@@ -267,14 +198,6 @@ require('lazy').setup {
       }
     end,
   },
-
-  -- NOTE: Plugins can specify dependencies.
-  --
-  -- The dependencies are proper plugin specifications as well - anything
-  -- you do for a plugin at the top level, you can do for a dependency.
-  --
-  -- Use the `dependencies` key to specify the dependencies of a particular plugin
-
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
@@ -334,7 +257,7 @@ require('lazy').setup {
         -- },
         pickers = {
           find_files = {
-            hidden = true,
+            hidden = false,
           },
         },
         extensions = {
@@ -359,7 +282,7 @@ require('lazy').setup {
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      -- vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -385,7 +308,69 @@ require('lazy').setup {
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
+  { -- Autoformat
+    'stevearc/conform.nvim',
+    opts = {
+      notify_on_error = false,
 
+      -- Format On Save with Toggling vvv
+      format_on_save = function(bufnr)
+        -- Disable with a global or buffer-local variable
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+          return
+        end
+        return { timeout_ms = 500, lsp_fallback = true }
+      end,
+      formatters_by_ft = {
+        lua = { 'stylua' },
+        -- Conform can also run multiple formatters sequentially
+        -- python = { "isort", "black" },
+        --
+        -- You can use a sub-list to tell conform to run *until* a formatter
+        -- is found.
+        javascript = { { 'prettierd', 'prettier' } },
+        typescript = { { 'prettierd', 'prettier' } },
+      },
+    },
+  },
+  { -- You can easily change to a different colorscheme.
+    -- Change the name of the colorscheme plugin below, and then
+    -- change the command in the config to whatever the name of that colorscheme is
+    --
+    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
+    'ellisonleao/gruvbox.nvim',
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
+    config = function()
+      -- Load the colorscheme here
+      vim.cmd.colorscheme 'gruvbox'
+
+      -- You can configure highlights by doing something like
+      vim.cmd.hi 'Comment gui=none'
+    end,
+  },
+  { -- Highlight todo, notes, etc in comments
+    'folke/todo-comments.nvim',
+    event = 'VimEnter',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = { signs = false },
+  },
+  {
+    'ahmedkhalf/project.nvim',
+    config = function()
+      require('project_nvim').setup {
+        manual_mode = false, -- Manual mode doesn't automatically change your root directory, so you have
+        detection_methods = { 'pattern', 'lsp' },
+        patterns = { 'node_modules', 'vendor', 'package.json', '.git' }, -- All the patterns used to detect root dir, when **"pattern"** is in detection_methods
+        ignore_lsp = {},
+        exclude_dirs = { '.next', 'node_modules', 'vendor', '.cargo' },
+        show_hidden = true,
+        silent_chdir = false,
+        scope_chdir = 'global',
+        datapath = vim.fn.stdpath 'data',
+      }
+    end,
+  },
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -533,7 +518,13 @@ require('lazy').setup {
         bashls = {},
         tsserver = {},
         emmet_language_server = {},
-        phpactor = {},
+        phpactor = {
+          init_options = {
+            ['language_server_phpstan.enabled'] = true,
+            ['language_server_php_cs_fixer.enabled'] = true,
+            ['php_code_sniffer.enabled'] = true,
+          },
+        },
         --
 
         lua_ls = {
@@ -594,33 +585,6 @@ require('lazy').setup {
       }
     end,
   },
-
-  { -- Autoformat
-    'stevearc/conform.nvim',
-    opts = {
-      notify_on_error = false,
-
-      -- Format On Save with Toggling vvv
-      format_on_save = function(bufnr)
-        -- Disable with a global or buffer-local variable
-        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-          return
-        end
-        return { timeout_ms = 500, lsp_fallback = true }
-      end,
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use a sub-list to tell conform to run *until* a formatter
-        -- is found.
-        javascript = { { 'prettierd', 'prettier' } },
-        typescript = { { 'prettierd', 'prettier' } },
-      },
-    },
-  },
-
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
     event = 'InsertEnter',
@@ -713,64 +677,6 @@ require('lazy').setup {
       }
     end,
   },
-
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
-    'ellisonleao/gruvbox.nvim',
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    config = function()
-      -- Load the colorscheme here
-      vim.cmd.colorscheme 'gruvbox'
-
-      -- You can configure highlights by doing something like
-      vim.cmd.hi 'Comment gui=none'
-    end,
-  },
-
-  -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
-
-  { -- Collection of various small independent plugins/modules
-    'echasnovski/mini.nvim',
-    config = function()
-      -- Better Around/Inside textobjects
-      --
-      -- Examples:
-      --  - va)  - [V]isually select [A]round [)]paren
-      --  - yinq - [Y]ank [I]nside [N]ext [']quote
-      --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
-
-      -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      --
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
-
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      statusline.setup()
-
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we disable the section for
-      -- cursor information because line numbers are already enabled
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return ''
-      end
-
-      -- ... and there is more!
-      --  Check out: https://github.com/echasnovski/mini.nvim
-    end,
-  },
-
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -779,11 +685,11 @@ require('lazy').setup {
 
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
+        ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'php', 'typescript', 'javascript' },
         -- Autoinstall languages that are not installed
         auto_install = true,
         highlight = { enable = true },
-        indent = { enable = true },
+        indent = { enable = true, disable = { 'tsx', 'jsx', 'ts' } },
       }
 
       -- There are additional nvim-treesitter modules that you can use to interact
