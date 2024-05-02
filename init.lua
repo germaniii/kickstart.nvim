@@ -368,7 +368,7 @@ require('lazy').setup {
         ignore_lsp = {},
         exclude_dirs = { '.next', 'node_modules', 'vendor', '.cargo' },
         show_hidden = true,
-        silent_chdir = false,
+        silent_chdir = true,
         scope_chdir = 'global',
         datapath = vim.fn.stdpath 'data',
       }
