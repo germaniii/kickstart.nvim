@@ -153,6 +153,13 @@ require('lazy').setup {
       require('ranger-nvim').setup {
         enable_cmds = true,
         replace_netrw = true,
+        ui = {
+          border = 'none',
+          height = 0.5,
+          width = 0.5,
+          x = 0.5,
+          y = 0.5,
+        },
       }
       vim.api.nvim_set_keymap('n', '<leader><leader>', '', {
         noremap = true,
