@@ -150,7 +150,10 @@ require('lazy').setup {
   {
     'kelly-lin/ranger.nvim',
     config = function()
-      require('ranger-nvim').setup { replace_netrw = true }
+      require('ranger-nvim').setup {
+        enable_cmds = true,
+        replace_netrw = true,
+      }
       vim.api.nvim_set_keymap('n', '<leader><leader>', '', {
         noremap = true,
         callback = function()
