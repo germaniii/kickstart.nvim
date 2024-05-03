@@ -148,22 +148,15 @@ require('lazy').setup {
     opts = {}, -- this is needed to force load Comment.nvim
   },
   {
-    'nvim-tree/nvim-tree.lua',
-    version = '*',
-    lazy = false,
-    dependencies = {
-      'nvim-tree/nvim-web-devicons',
-    },
+    'kelly-lin/ranger.nvim',
     config = function()
-      require('nvim-tree').setup {
-        vim.keymap.set('n', '<leader><leader>', '<cmd>NvimTreeToggle<CR>', { desc = 'Open tree toggle' }),
-        renderer = {
-          group_empty = true,
-        },
-        filters = {
-          dotfiles = false,
-        },
-      }
+      require('ranger-nvim').setup { replace_netrw = true }
+      vim.api.nvim_set_keymap('n', '<leader><leader>', '', {
+        noremap = true,
+        callback = function()
+          require('ranger-nvim').open(true)
+        end,
+      })
     end,
   },
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
