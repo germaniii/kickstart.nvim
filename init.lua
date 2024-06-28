@@ -142,6 +142,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  'tpope/vim-obsession', -- This is used by tmux-ressurect plugin
   'mg979/vim-visual-multi', -- select multiple search words at once.
   { -- "gc" to comment visual regions/lines
     'numToStr/Comment.nvim',
