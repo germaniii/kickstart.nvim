@@ -151,9 +151,16 @@ require('lazy').setup {
   {
     'kelly-lin/ranger.nvim',
     config = function()
-      require('ranger-nvim').setup {
+      local ranger_nvim = require 'ranger-nvim'
+      ranger_nvim.setup {
         enable_cmds = true,
         replace_netrw = true,
+        keybinds = {
+          ['<C-v>'] = ranger_nvim.OPEN_MODE.vsplit,
+          ['<C-s>'] = ranger_nvim.OPEN_MODE.split,
+          -- ['ot'] = ranger_nvim.OPEN_MODE.tabedit,
+          -- ['or'] = ranger_nvim.OPEN_MODE.rifle,
+        },
         ui = {
           border = 'none',
           height = 0.5,
@@ -232,6 +239,7 @@ require('lazy').setup {
       { 'nvim-tree/nvim-web-devicons' },
     },
     config = function()
+      local actions = require 'telescope.actions'
       -- Telescope is a fuzzy finder that comes with a lot of different things that
       -- it can fuzzy find! It's more than just a "file finder", it can search
       -- many different aspects of Neovim, your workspace, LSP, and more!
@@ -262,6 +270,13 @@ require('lazy').setup {
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
         -- },
+        defaults = {
+          mappings = {
+            i = {
+              ['<C-s>'] = actions.select_vertical,
+            },
+          },
+        },
         pickers = {
           find_files = {
             hidden = false,
