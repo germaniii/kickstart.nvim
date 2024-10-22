@@ -125,6 +125,13 @@ end, {
   desc = 'Auto sort typescript imports',
 })
 
+vim.api.nvim_set_keymap('n', '<leader><leader>', '', {
+  noremap = true,
+  callback = function()
+    require('oil').open_float()
+  end,
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -143,39 +150,11 @@ require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'tpope/vim-obsession', -- This is used by tmux-ressurect plugin
+  'prettier/vim-prettier',
   'mg979/vim-visual-multi', -- select multiple search words at once.
   { -- "gc" to comment visual regions/lines
     'numToStr/Comment.nvim',
     opts = {}, -- this is needed to force load Comment.nvim
-  },
-  {
-    'kelly-lin/ranger.nvim',
-    config = function()
-      local ranger_nvim = require 'ranger-nvim'
-      ranger_nvim.setup {
-        enable_cmds = true,
-        replace_netrw = true,
-        keybinds = {
-          ['<C-v>'] = ranger_nvim.OPEN_MODE.vsplit,
-          ['<C-s>'] = ranger_nvim.OPEN_MODE.split,
-          -- ['ot'] = ranger_nvim.OPEN_MODE.tabedit,
-          -- ['or'] = ranger_nvim.OPEN_MODE.rifle,
-        },
-        ui = {
-          border = 'none',
-          height = 0.5,
-          width = 0.5,
-          x = 0.5,
-          y = 0.5,
-        },
-      }
-      vim.api.nvim_set_keymap('n', '<leader><leader>', '', {
-        noremap = true,
-        callback = function()
-          require('ranger-nvim').open(true)
-        end,
-      })
-    end,
   },
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -284,14 +263,6 @@ require('lazy').setup {
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
-      require('which-key').setup()
-      require('which-key').register { -- Document existing key chains
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-      }
     end,
   },
   { -- Fuzzy Finder (files, lsp, etc)
@@ -803,6 +774,62 @@ require('lazy').setup {
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,
+  },
+  {
+    'stevearc/oil.nvim',
+    ---@module 'oil'
+    opts = {
+      default_file_explorer = true,
+      -- Set to true to watch the filesystem for changes and reload oil
+      watch_for_changes = true,
+      view_options = {
+        -- Show files and directories that start with "."
+        show_hidden = true,
+      },
+      win_options = {
+        signcolumn = 'yes:2',
+      },
+      float = {
+        -- Padding around the floating window
+        padding = 5,
+      },
+      columns = {
+        'icon',
+        'permissions',
+        'size',
+        'mtime',
+      },
+      keymaps = {
+        ['g?'] = 'actions.show_help',
+        ['<CR>'] = 'actions.select',
+        ['<C-v>'] = { 'actions.select', opts = { vertical = true }, desc = 'Open the entry in a vertical split' },
+        ['<C-x>'] = { 'actions.select', opts = { horizontal = true }, desc = 'Open the entry in a horizontal split' },
+        -- ['<C-t>'] = { 'actions.select', opts = { tab = true }, desc = 'Open the entry in new tab' },
+        ['<C-p>'] = 'actions.preview',
+        ['<C-c>'] = 'actions.close',
+        ['<C-r>'] = 'actions.refresh',
+        ['-'] = 'actions.parent',
+        ['_'] = 'actions.open_cwd',
+        ['`'] = 'actions.cd',
+        ['~'] = { 'actions.cd', opts = { scope = 'tab' }, desc = ':tcd to the current oil directory', mode = 'n' },
+        ['gs'] = 'actions.change_sort',
+        ['gx'] = 'actions.open_external',
+        ['g.'] = 'actions.toggle_hidden',
+        ['g\\'] = 'actions.toggle_trash',
+      },
+    },
+    -- Optional dependencies
+    -- dependencies = { { 'echasnovski/mini.icons', opts = {} } },
+    dependencies = { 'nvim-tree/nvim-web-devicons' }, -- use if prefer nvim-web-devicons
+  },
+  {
+    'refractalize/oil-git-status.nvim',
+
+    dependencies = {
+      'stevearc/oil.nvim',
+    },
+
+    config = true,
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
