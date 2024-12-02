@@ -128,7 +128,15 @@ end, {
 vim.api.nvim_set_keymap('n', '<leader><leader>', '', {
   noremap = true,
   callback = function()
-    require('oil').open_float()
+    local oil = require 'oil'
+    oil.open_float()
+    -- Wait until oil has opened, for a maximum of 1 second.
+    vim.wait(1000, function()
+      return oil.get_cursor_entry() ~= nil
+    end)
+    if oil.get_cursor_entry() then
+      oil.open_preview()
+    end
   end,
 })
 
@@ -150,7 +158,16 @@ require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'tpope/vim-obsession', -- This is used by tmux-ressurect plugin
+  'duane9/nvim-rg', -- This is RipGrep but in NVIM :Rg
   'prettier/vim-prettier',
+  {
+    'nvimdev/indentmini.nvim',
+    config = function()
+      require('indentmini').setup {
+        only_current = true,
+      } -- use default config
+    end,
+  },
   'mg979/vim-visual-multi', -- select multiple search words at once.
   { -- "gc" to comment visual regions/lines
     'numToStr/Comment.nvim',
@@ -660,6 +677,12 @@ require('lazy').setup {
       }
     end,
   },
+  {
+    'lukas-reineke/cmp-under-comparator',
+    dependencies = {
+      'hrsh7th/nvim-cmp',
+    },
+  },
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
     event = 'InsertEnter',
@@ -792,6 +815,9 @@ require('lazy').setup {
       float = {
         -- Padding around the floating window
         padding = 5,
+        win_options = {
+          winblend = 10,
+        },
       },
       columns = {
         'icon',
@@ -830,6 +856,26 @@ require('lazy').setup {
     },
 
     config = true,
+  },
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    config = function()
+      require('treesitter-context').setup {
+        enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+        multiwindow = false, -- Enable multiwindow support.
+        max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+        min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+        line_numbers = true,
+        multiline_threshold = 20, -- Maximum number of lines to show for a single context
+        trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+        mode = 'cursor', -- Line used to calculate context. Choices: 'cursor', 'topline'
+        -- Separator between context and content. Should be a single character string, like '-'.
+        -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
+        separator = nil,
+        zindex = 20, -- The Z-index of the context window
+        on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
+      }
+    end,
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
