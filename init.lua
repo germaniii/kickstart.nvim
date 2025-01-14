@@ -240,26 +240,26 @@ require('lazy').setup {
         -- end)
 
         -- Actions
-        map('n', '<leader>hs', gitsigns.stage_hunk, { desc = 'Stage Hunk' })
-        map('n', '<leader>hu', gitsigns.undo_stage_hunk, { desc = 'Undo Stage Hunk' })
-        map('n', '<leader>hr', gitsigns.reset_hunk, { desc = 'Reset Hunk' })
-        map('n', '<leader>hp', gitsigns.preview_hunk, { desc = 'Preview Hunk' })
+        map('n', '<leader>gs', gitsigns.stage_hunk, { desc = 'Stage Hunk' })
+        map('n', '<leader>gu', gitsigns.undo_stage_hunk, { desc = 'Undo Stage Hunk' })
+        map('n', '<leader>gr', gitsigns.reset_hunk, { desc = 'Reset Hunk' })
+        map('n', '<leader>gp', gitsigns.preview_hunk, { desc = 'Preview Hunk' })
         -- map('v', '<leader>hs', function()
         --   gitsigns.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
         -- end)
         -- map('v', '<leader>hr', function()
         --   gitsigns.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
         -- end)
-        map('n', '<leader>hS', gitsigns.stage_buffer, { desc = 'Stage Buffer' })
-        map('n', '<leader>hR', gitsigns.reset_buffer, { desc = 'Reset Buffer' })
-        map('n', '<leader>hb', function()
+        map('n', '<leader>gS', gitsigns.stage_buffer, { desc = 'Stage Buffer' })
+        map('n', '<leader>gR', gitsigns.reset_buffer, { desc = 'Reset Buffer' })
+        map('n', '<leader>gb', function()
           gitsigns.blame_line { full = true }
         end, { desc = 'Show Full Blame Line' })
-        map('n', '<leader>hd', gitsigns.diffthis, { desc = 'Diff this' })
+        map('n', '<leader>gd', gitsigns.diffthis, { desc = 'Diff this' })
         -- map('n', '<leader>hD', function()
         --   gitsigns.diffthis '~'
         -- end)
-        map('n', '<leader>td', gitsigns.toggle_deleted, { desc = 'Toggle Deleted Lines' }) -- Show deleted lines
+        map('n', '<leader>gt', gitsigns.toggle_deleted, { desc = 'Toggle Deleted Lines' }) -- Show deleted lines
         -- map('n', '<leader>tb', gitsigns.toggle_current_line_blame) -- Since we want to always show
 
         -- Text object
@@ -383,14 +383,13 @@ require('lazy').setup {
     -- change the command in the config to whatever the name of that colorscheme is
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
-    'ellisonleao/gruvbox.nvim',
+    -- 'ellisonleao/gruvbox.nvim',
+    'andreasvc/vim-256noir',
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      -- Load the colorscheme here
-      vim.cmd.colorscheme 'gruvbox'
-
-      -- You can configure highlights by doing something like
+      -- vim.cmd.colorscheme 'gruvbox'
+      vim.cmd.colorscheme '256_noir'
       vim.cmd.hi 'Comment gui=none'
     end,
   },
@@ -688,7 +687,7 @@ require('lazy').setup {
         -- Padding around the floating window
         padding = 5,
         win_options = {
-          winblend = 10,
+          -- winblend = 10,
         },
       },
       columns = {
