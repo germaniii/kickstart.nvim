@@ -304,7 +304,7 @@ require('lazy').setup {
         defaults = {
           mappings = {
             i = {
-              ['<C-s>'] = actions.select_vertical,
+              ['<C-s>'] = actions.select_horizontal,
             },
           },
         },
@@ -698,7 +698,7 @@ require('lazy').setup {
         ['g?'] = 'actions.show_help',
         ['<CR>'] = 'actions.select',
         ['<C-v>'] = { 'actions.select', opts = { vertical = true }, desc = 'Open the entry in a vertical split' },
-        ['<C-x>'] = { 'actions.select', opts = { horizontal = true }, desc = 'Open the entry in a horizontal split' },
+        ['<C-s>'] = { 'actions.select', opts = { horizontal = true }, desc = 'Open the entry in a horizontal split' },
         -- ['<C-t>'] = { 'actions.select', opts = { tab = true }, desc = 'Open the entry in new tab' },
         ['<C-p>'] = 'actions.preview',
         ['<C-c>'] = 'actions.close',
