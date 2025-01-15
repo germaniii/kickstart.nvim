@@ -383,14 +383,18 @@ require('lazy').setup {
     -- change the command in the config to whatever the name of that colorscheme is
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
-    -- 'ellisonleao/gruvbox.nvim',
-    'andreasvc/vim-256noir',
+    'eddyekofo94/gruvbox-flat.nvim',
+    -- 'andreasvc/vim-256noir',
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      -- vim.cmd.colorscheme 'gruvbox'
-      vim.cmd.colorscheme '256_noir'
-      vim.cmd.hi 'Comment gui=none'
+      -- gruvbox config
+      vim.g.gruvbox_flat_style = 'hard' -- hard | dark | undefined
+      vim.g.gruvbox_italic_keywords = 0
+
+      -- vim.cmd.colorscheme '256_noir'
+      vim.cmd.colorscheme 'gruvbox-flat'
+      vim.cmd.hi 'Comment gui=none ctermbg=none'
     end,
   },
   { -- Highlight todo, notes, etc in comments
