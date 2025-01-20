@@ -700,9 +700,9 @@ require('lazy').setup {
       },
       keymaps = {
         ['g?'] = 'actions.show_help',
-        ['<CR>'] = 'actions.select',
-        ['<C-v>'] = { 'actions.select', opts = { vertical = true }, desc = 'Open the entry in a vertical split' },
-        ['<C-s>'] = { 'actions.select', opts = { horizontal = true }, desc = 'Open the entry in a horizontal split' },
+        ['<CR>'] = { 'actions.select', opts = { vertical = true, close = true } },
+        ['<C-v>'] = { 'actions.select', opts = { vertical = true, close = true }, desc = 'Open the entry in a vertical split' },
+        ['<C-s>'] = { 'actions.select', opts = { horizontal = true, close = true }, desc = 'Open the entry in a horizontal split' },
         -- ['<C-t>'] = { 'actions.select', opts = { tab = true }, desc = 'Open the entry in new tab' },
         ['<C-p>'] = 'actions.preview',
         ['<C-c>'] = 'actions.close',
