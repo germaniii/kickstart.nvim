@@ -158,22 +158,10 @@ require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'tpope/vim-obsession', -- This is used by tmux-ressurect plugin
-  'duane9/nvim-rg', -- This is RipGrep but in NVIM :Rg
-  'prettier/vim-prettier',
-  {
-    'nvimdev/indentmini.nvim',
-    config = function()
-      require('indentmini').setup {
-        only_current = true,
-      } -- use default config
-    end,
-  },
+  'prettier/vim-prettier', -- prettier plugin used in SE project
   'mg979/vim-visual-multi', -- select multiple search words at once.
-  { -- "gc" to comment visual regions/lines
-    'numToStr/Comment.nvim',
-    opts = {}, -- this is needed to force load Comment.nvim
-  },
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
+  'numToStr/Comment.nvim', -- "gc" to comment visual regions/lines
+  {
     'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
@@ -310,7 +298,7 @@ require('lazy').setup {
         },
         pickers = {
           find_files = {
-            hidden = false,
+            hidden = true,
           },
         },
         extensions = {
@@ -319,7 +307,6 @@ require('lazy').setup {
           },
         },
       }
-
       -- Enable telescope extensions, if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
@@ -329,12 +316,12 @@ require('lazy').setup {
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      -- vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+      -- vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      -- vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      -- vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       -- vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
@@ -354,34 +341,9 @@ require('lazy').setup {
           prompt_title = 'Live Grep in Open Files',
         }
       end, { desc = '[S]earch [/] in Open Files' })
-
-      -- Shortcut for searching your neovim configuration files
-      vim.keymap.set('n', '<leader>sn', function()
-        builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[S]earch [N]eovim files' })
     end,
   },
-  { -- Autoformat
-    'stevearc/conform.nvim',
-    opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr) -- Format On Save with Toggling
-        -- Disable with a global or buffer-local variable
-        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-          return
-        end
-        return { timeout_ms = 500, lsp_fallback = false }
-      end,
-      formatters_by_ft = {
-        lua = { 'stylua' },
-      },
-    },
-  },
   {
-    -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is
-    --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
     'eddyekofo94/gruvbox-flat.nvim',
     -- 'andreasvc/vim-256noir',
@@ -411,7 +373,7 @@ require('lazy').setup {
         detection_methods = { 'pattern', 'lsp' },
         patterns = { 'node_modules', 'vendor', 'package.json', '.git' }, -- All the patterns used to detect root dir, when **"pattern"** is in detection_methods
         ignore_lsp = {},
-        exclude_dirs = { '.next', 'node_modules', 'vendor', '.cargo' },
+        exclude_dirs = { '.next', 'node_modules', 'vendor', '.cargo', 'build' },
         show_hidden = true,
         silent_chdir = true,
         scope_chdir = 'global',
@@ -437,7 +399,6 @@ require('lazy').setup {
           local map = function(keys, func, desc)
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
-
           -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-T>.
@@ -479,53 +440,31 @@ require('lazy').setup {
           --  For example, in C this would take you to the header
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
-          -- The following two autocommands are used to highlight references of the
-          -- word under your cursor when your cursor rests there for a little while.
-          --    See `:help CursorHold` for information about when this is executed
-          --
-          -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
-            vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-              buffer = event.buf,
-              callback = vim.lsp.buf.document_highlight,
-            })
+            client.server_capabilities.semanticTokensProvider = nil
+            client.server_capabilities.documentFormattingProvider = false
+            client.server_capabilities.documentFormattingRangeProvider = false
 
-            vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-              buffer = event.buf,
-              callback = vim.lsp.buf.clear_references,
-            })
+            -- Currently not working
+            -- vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+            --   buffer = event.buf,
+            --   callback = vim.lsp.buf.document_highlight,
+            -- })
+            --
+            -- vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+            --   buffer = event.buf,
+            --   callback = vim.lsp.buf.clear_references,
+            -- })
           end
         end,
       })
-
-      -- LSP servers and clients are able to communicate to each other what features they support.
-      --  By default, Neovim doesn't support everything that is in the LSP Specification.
-      --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
-      --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
-
-      -- Enable the following language servers
-      --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
-      --
-      --  Add any additional override configuration in the following tables. Available keys are:
-      --  - cmd (table): Override the default command used to start the server
-      --  - filetypes (table): Override the default list of associated filetypes for the server
-      --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
-      --  - settings (table): Override the default settings passed when initializing the server.
-      --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), require('cmp_nvim_lsp').default_capabilities())
+      capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
       local servers = {
         clangd = {},
-        -- gopls = {},
-        -- pyright = {},
         rust_analyzer = {},
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`tsserver`) will work just fine
         phpactor = {
           init_options = {
             ['language_server_phpstan.enabled'] = true,
@@ -533,8 +472,6 @@ require('lazy').setup {
             ['php_code_sniffer.enabled'] = true,
           },
         },
-        --
-
         lua_ls = {
           -- cmd = {...},
           -- filetypes { ...},
@@ -568,7 +505,6 @@ require('lazy').setup {
         'stylua', -- Used to format lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
@@ -583,11 +519,20 @@ require('lazy').setup {
       }
     end,
   },
-  {
-    -- Sorts auto complete recommendations
-    'lukas-reineke/cmp-under-comparator',
-    dependencies = {
-      'hrsh7th/nvim-cmp',
+  { -- Autoformat
+    'stevearc/conform.nvim',
+    opts = {
+      notify_on_error = false,
+      format_on_save = function(bufnr) -- Format On Save with Toggling
+        -- Disable with a global or buffer-local variable
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+          return
+        end
+        return { timeout_ms = 500, lsp_fallback = false }
+      end,
+      formatters_by_ft = {
+        lua = { 'stylua' },
+      },
     },
   },
   { -- Autocompletion
@@ -608,26 +553,19 @@ require('lazy').setup {
         end)(),
       },
       'saadparwaiz1/cmp_luasnip',
-
-      -- Adds other completion capabilities.
-      --  nvim-cmp does not ship with all sources by default. They are split
-      --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
-
-      -- If you want to add a bunch of pre-configured snippets,
-      --    you can use this plugin to help you. It even has snippets
-      --    for various frameworks/libraries/etc. but you will have to
-      --    set up the ones that are useful for you.
-      -- 'rafamadriz/friendly-snippets',
     },
     config = function()
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
       luasnip.config.setup {}
-
       cmp.setup {
+        performance = {
+          max_view_entries = 5,
+          fetching_timeout = 1,
+        },
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
@@ -637,7 +575,8 @@ require('lazy').setup {
         mapping = cmp.mapping.preset.insert {
           ['<C-n>'] = cmp.mapping.select_next_item(),
           ['<C-p>'] = cmp.mapping.select_prev_item(),
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<CR>'] = cmp.mapping.confirm { select = true },
+          -- ['<C-y>'] = cmp.mapping.confirm { select = true },
           ['<C-Space>'] = cmp.mapping.complete {},
           ['<C-l>'] = cmp.mapping(function()
             if luasnip.expand_or_locally_jumpable() then
@@ -658,6 +597,13 @@ require('lazy').setup {
         },
       }
     end,
+  },
+  {
+    -- Sorts auto complete recommendations
+    'lukas-reineke/cmp-under-comparator',
+    dependencies = {
+      'hrsh7th/nvim-cmp',
+    },
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
@@ -700,10 +646,9 @@ require('lazy').setup {
       },
       keymaps = {
         ['g?'] = 'actions.show_help',
-        ['<CR>'] = { 'actions.select', opts = { vertical = true, close = true } },
+        ['<CR>'] = { 'actions.select', opts = { close = true } },
         ['<C-v>'] = { 'actions.select', opts = { vertical = true, close = true }, desc = 'Open the entry in a vertical split' },
         ['<C-s>'] = { 'actions.select', opts = { horizontal = true, close = true }, desc = 'Open the entry in a horizontal split' },
-        -- ['<C-t>'] = { 'actions.select', opts = { tab = true }, desc = 'Open the entry in new tab' },
         ['<C-p>'] = 'actions.preview',
         ['<C-c>'] = 'actions.close',
         ['<C-r>'] = 'actions.refresh',
@@ -715,6 +660,7 @@ require('lazy').setup {
         ['gx'] = 'actions.open_external',
         ['g.'] = 'actions.toggle_hidden',
         ['g\\'] = 'actions.toggle_trash',
+        -- ['<C-t>'] = { 'actions.select', opts = { tab = true }, desc = 'Open the entry in new tab' },
       },
     },
     dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -743,6 +689,38 @@ require('lazy').setup {
     'MeanderingProgrammer/render-markdown.nvim',
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
     opts = {},
+  },
+  {
+    'NStefan002/visual-surround.nvim',
+    config = function()
+      require('visual-surround').setup {
+        -- if set to false, the user must manually add keymaps
+        use_default_keymaps = false,
+        -- will be ignored if use_default_keymaps is set to false
+        surround_chars = { '{', '}', '[', ']', '(', ')', "'", '"', '`', '<', '>' },
+        -- delete surroundings when the selection block starts and ends with surroundings
+        enable_wrapped_deletion = false,
+        -- whether to exit visual mode after adding surround
+        exit_visual_mode = false,
+      }
+
+      -- Common surround chars
+      local prefix = '<leader>sw'
+      local surround_chars = { '{', '[', '(', "'", '"', '<' }
+      local surround = require('visual-surround').surround
+      for _, key in pairs(surround_chars) do
+        vim.keymap.set('v', prefix .. key, function()
+          surround(key)
+        end, { desc = '[visual-surround] Surround selection with ' .. key })
+      end
+
+      -- Custom string
+      vim.keymap.set('v', '<leader>sc', function()
+        local opening = vim.fn.input 'Opening: '
+        -- local closing = vim.fn.input 'Closing: ' -- leave empty if you want to use opening string for both
+        require('visual-surround').surround(opening) -- (opening, closing)
+      end, { desc = '[visual-surround] Surround selection with custom string' })
+    end,
   },
 }
 
