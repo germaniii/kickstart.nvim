@@ -161,6 +161,7 @@ require('lazy').setup {
   'prettier/vim-prettier', -- prettier plugin used in SE project
   'mg979/vim-visual-multi', -- select multiple search words at once.
   'numToStr/Comment.nvim', -- "gc" to comment visual regions/lines
+  'farmergreg/vim-lastplace',
   {
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -353,6 +354,7 @@ require('lazy').setup {
       -- gruvbox config
       vim.g.gruvbox_flat_style = 'hard' -- hard | dark | undefined
       vim.g.gruvbox_italic_keywords = 0
+      vim.g.gruvbox_transparent = 1
 
       -- vim.cmd.colorscheme '256_noir'
       vim.cmd.colorscheme 'gruvbox-flat'
