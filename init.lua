@@ -354,7 +354,7 @@ require('lazy').setup {
       -- gruvbox config
       vim.g.gruvbox_flat_style = 'hard' -- hard | dark | undefined
       vim.g.gruvbox_italic_keywords = 0
-      vim.g.gruvbox_transparent = 1
+      vim.g.gruvbox_transparent = 0
 
       -- vim.cmd.colorscheme '256_noir'
       vim.cmd.colorscheme 'gruvbox-flat'
@@ -723,6 +723,10 @@ require('lazy').setup {
         require('visual-surround').surround(opening) -- (opening, closing)
       end, { desc = '[visual-surround] Surround selection with custom string' })
     end,
+  },
+  {
+    'sphamba/smear-cursor.nvim',
+    opts = {},
   },
 }
 
