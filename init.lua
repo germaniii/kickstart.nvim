@@ -728,22 +728,6 @@ require('lazy').setup {
     'sphamba/smear-cursor.nvim',
     opts = {},
   },
-  {
-    'folke/flash.nvim',
-    event = 'VeryLazy',
-    opts = {
-      modes = {
-        -- a regular search with `/` or `?`
-        search = {
-          -- when `true`, flash will be activated during regular search by default.
-          -- You can always toggle when searching with `require("flash").toggle()`
-          enabled = true,
-          highlight = { backdrop = true },
-          jump = { history = true, register = true, nohlsearch = true },
-        },
-      },
-    },
-  },
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
