@@ -693,7 +693,7 @@ require('lazy').setup {
     opts = {},
   },
   {
-    'NSwefan002/visual-surround.nvim',
+    'NStefan002/visual-surround.nvim',
     config = function()
       require('visual-surround').setup {
         -- if set to false, the user must manually add keymaps
