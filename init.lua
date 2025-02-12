@@ -687,6 +687,10 @@ require('lazy').setup {
         zindex = 20, -- The Z-index of the context window
         on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
       }
+      vim.cmd.hi 'TreesitterContextLineNumberBottom gui=underline'
+      vim.keymap.set('n', 'gc', function()
+        require('treesitter-context').go_to_context(vim.v.count1)
+      end, { silent = true })
     end,
   },
   {
@@ -710,7 +714,7 @@ require('lazy').setup {
 
       -- Common surround chars
       local prefix = '<leader>sw'
-      local surround_chars = { '{', '[', '(', "'", '"', '<' }
+      local surround_chars = { '{', '[', '(', "'", '"', '<', '`' }
       local surround = require('visual-surround').surround
       for _, key in pairs(surround_chars) do
         vim.keymap.set('v', prefix .. key, function()
