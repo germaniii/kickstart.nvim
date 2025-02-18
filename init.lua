@@ -79,12 +79,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
-vim.api.nvim_create_autocmd('ColorScheme', {
-  pattern = '*',
-  callback = function()
-    vim.api.nvim_set_hl(0, 'EyelinerPrimary', { bold = true, underline = true })
-  end,
-})
 
 -- [[ User Commands ]]
 --  This can be invoked by pressing `:` followed by the command
@@ -159,11 +153,32 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  'tpope/vim-obsession', -- This is used by tmux-ressurect plugin
-  'prettier/vim-prettier', -- prettier plugin used in SE project
   'mg979/vim-visual-multi', -- select multiple search words at once.
   'numToStr/Comment.nvim', -- "gc" to comment visual regions/lines
-  'farmergreg/vim-lastplace',
+  'prettier/vim-prettier', -- prettier plugin used in SE project
+  {
+    'sphamba/smear-cursor.nvim',
+    opts = {},
+  },
+  { -- Easy horizontal traversal
+    'jinh0/eyeliner.nvim',
+    config = function()
+      require('eyeliner').setup {
+        highlight_on_key = true, -- show highlights only after keypress
+        dim = true, -- dim all other characters if set to true (recommended!)
+      }
+    end,
+  },
+  {
+    -- Global search and replace with <C-S>
+    'nvim-pack/nvim-spectre',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons',
+      'folke/trouble.nvim',
+    },
+    opts = {},
+  },
   {
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -206,66 +221,19 @@ require('lazy').setup {
       },
       on_attach = function(bufnr)
         local gitsigns = require 'gitsigns'
-
-        local function map(mode, l, r, opts)
-          opts = opts or {}
-          opts.buffer = bufnr
-          vim.keymap.set(mode, l, r, opts)
-        end
-
-        -- -- Navigation
-        -- map('n', ']c', function()
-        --   if vim.wo.diff then
-        --     vim.cmd.normal { ']c', bang = true }
-        --   else
-        --     gitsigns.nav_hunk 'next'
-        --   end
-        -- end)
-        --
-        -- map('n', '[c', function()
-        --   if vim.wo.diff then
-        --     vim.cmd.normal { '[c', bang = true }
-        --   else
-        --     gitsigns.nav_hunk 'prev'
-        --   end
-        -- end)
-
         -- Actions
-        map('n', '<leader>gs', gitsigns.stage_hunk, { desc = 'Stage Hunk' })
-        map('n', '<leader>gu', gitsigns.undo_stage_hunk, { desc = 'Undo Stage Hunk' })
-        map('n', '<leader>gr', gitsigns.reset_hunk, { desc = 'Reset Hunk' })
-        map('n', '<leader>gp', gitsigns.preview_hunk, { desc = 'Preview Hunk' })
-        -- map('v', '<leader>hs', function()
-        --   gitsigns.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
-        -- end)
-        -- map('v', '<leader>hr', function()
-        --   gitsigns.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
-        -- end)
-        map('n', '<leader>gS', gitsigns.stage_buffer, { desc = 'Stage Buffer' })
-        map('n', '<leader>gR', gitsigns.reset_buffer, { desc = 'Reset Buffer' })
-        map('n', '<leader>gb', function()
+        vim.keymap.set('n', '<leader>gs', gitsigns.stage_hunk, { desc = 'Stage Hunk', buffer = bufnr })
+        vim.keymap.set('n', '<leader>gr', gitsigns.reset_hunk, { desc = 'Reset Hunk', buffer = bufnr })
+        vim.keymap.set('n', '<leader>gp', gitsigns.preview_hunk, { desc = 'Preview Hunk', buffer = bufnr })
+        vim.keymap.set('n', '<leader>gS', gitsigns.stage_buffer, { desc = 'Stage Buffer', buffer = bufnr })
+        vim.keymap.set('n', '<leader>gR', gitsigns.reset_buffer, { desc = 'Reset Buffer', buffer = bufnr })
+        vim.keymap.set('n', '<leader>gb', function()
           gitsigns.blame_line { full = true }
         end, { desc = 'Show Full Blame Line' })
-        map('n', '<leader>gd', gitsigns.diffthis, { desc = 'Diff this' })
-        -- map('n', '<leader>hD', function()
-        --   gitsigns.diffthis '~'
-        -- end)
-        map('n', '<leader>gt', gitsigns.toggle_deleted, { desc = 'Toggle Deleted Lines' }) -- Show deleted lines
-        -- map('n', '<leader>tb', gitsigns.toggle_current_line_blame) -- Since we want to always show
-
-        -- Text object
-        map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+        vim.keymap.set('n', '<leader>gd', gitsigns.diffthis, { desc = 'Diff this', buffer = bufnr })
+        vim.keymap.set({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
       end,
     },
-  },
-  { -- Easy horizontal traversal
-    'jinh0/eyeliner.nvim',
-    config = function()
-      require('eyeliner').setup {
-        highlight_on_key = true, -- show highlights only after keypress
-        dim = true, -- dim all other characters if set to true (recommended!)
-      }
-    end,
   },
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
@@ -387,7 +355,6 @@ require('lazy').setup {
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
-      -- Automatically install LSPs and related tools to stdpath for neovim
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
@@ -399,66 +366,38 @@ require('lazy').setup {
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
-          local map = function(keys, func, desc)
-            vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
-          end
-          -- Jump to the definition of the word under your cursor.
-          --  This is where a variable was first declared, or where a function is defined, etc.
-          --  To jump back, press <C-T>.
-          map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-
-          -- Find references for the word under your cursor.
-          map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-
-          -- Jump to the implementation of the word under your cursor.
-          --  Useful when your language has ways of declaring types without an actual implementation.
-          map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-
-          -- Jump to the type of the word under your cursor.
-          --  Useful when you're not sure what type a variable is and you want to see
-          --  the definition of its *type*, not where it was *defined*.
-          map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-
-          -- Fuzzy find all the symbols in your current document.
-          --  Symbols are things like variables, functions, types, etc.
-          map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-
-          -- Fuzzy find all the symbols in your current workspace
-          --  Similar to document symbols, except searches over your whole project.
-          map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-
-          -- Rename the variable under your cursor
-          --  Most Language Servers support renaming across files, etc.
-          map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-
-          -- Execute a code action, usually your cursor needs to be on top of an error
-          -- or a suggestion from your LSP for this to activate.
-          map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-
-          -- Opens a popup that displays documentation about the word under your cursor
-          --  See `:help K` for why this keymap
-          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+          vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, { buffer = event.buf, desc = 'LSP: [G]oto [D]efinition' })
+          vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, { buffer = event.buf, desc = 'LSP:  [G]oto [R]eferences' })
+          vim.keymap.set('n', 'gI', require('telescope.builtin').lsp_implementations, { buffer = event.buf, desc = 'LSP:  [G]oto [I]mplementation' })
+          vim.keymap.set('n', '<leader>D', require('telescope.builtin').lsp_type_definitions, { buffer = event.buf, desc = 'LSP:  Type [D]efinition' })
+          vim.keymap.set('n', '<leader>ds', require('telescope.builtin').lsp_document_symbols, { buffer = event.buf, desc = 'LSP:  [D]ocument [S]ymbols' })
+          vim.keymap.set(
+            'n',
+            '<leader>ws',
+            require('telescope.builtin').lsp_dynamic_workspace_symbols,
+            { buffer = event.buf, desc = 'LSP:  [W]orkspace [S]ymbols' }
+          )
+          vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { buffer = event.buf, desc = 'LSP:  [R]e[n]ame' })
+          vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { buffer = event.buf, desc = 'LSP:  [C]ode [A]ction' })
+          vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = event.buf, desc = 'LSP: Hover Documentation' })
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header
-          map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+          vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = event.buf, desc = 'LSP: [G]oto [D]eclaration' })
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
             client.server_capabilities.semanticTokensProvider = nil
             client.server_capabilities.documentFormattingProvider = false
             client.server_capabilities.documentFormattingRangeProvider = false
-
-            -- Currently not working
-            -- vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-            --   buffer = event.buf,
-            --   callback = vim.lsp.buf.document_highlight,
-            -- })
-            --
-            -- vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-            --   buffer = event.buf,
-            --   callback = vim.lsp.buf.clear_references,
-            -- })
+            vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+              buffer = event.buf,
+              callback = vim.lsp.buf.document_highlight,
+            })
+            vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+              buffer = event.buf,
+              callback = vim.lsp.buf.clear_references,
+            })
           end
         end,
       })
@@ -558,6 +497,7 @@ require('lazy').setup {
       'saadparwaiz1/cmp_luasnip',
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'lukas-reineke/cmp-under-comparator',
     },
     config = function()
       -- See `:help cmp`
@@ -600,13 +540,6 @@ require('lazy').setup {
         },
       }
     end,
-  },
-  {
-    -- Sorts auto complete recommendations
-    'lukas-reineke/cmp-under-comparator',
-    dependencies = {
-      'hrsh7th/nvim-cmp',
-    },
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
@@ -687,7 +620,7 @@ require('lazy').setup {
         on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
       }
       vim.cmd.hi 'TreesitterContextLineNumberBottom gui=underline'
-      vim.keymap.set('n', 'gc', function()
+      vim.keymap.set('n', 'gt', function()
         require('treesitter-context').go_to_context(vim.v.count1)
       end, { silent = true })
     end,
@@ -728,20 +661,6 @@ require('lazy').setup {
         require('visual-surround').surround(opening) -- (opening, closing)
       end, { desc = '[visual-surround] Surround selection with custom string' })
     end,
-  },
-  {
-    'sphamba/smear-cursor.nvim',
-    opts = {},
-  },
-  {
-    -- Global search and replace with <C-S>
-    'nvim-pack/nvim-spectre',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'nvim-tree/nvim-web-devicons',
-      'folke/trouble.nvim',
-    },
-    opts = {},
   },
 }
 
