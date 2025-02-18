@@ -28,7 +28,7 @@ return {
       luasnip.config.setup {}
       cmp.setup {
         performance = {
-          max_view_entries = 5,
+          max_view_entries = 10,
           fetching_timeout = 1,
         },
         snippet = {
