@@ -355,12 +355,11 @@ require('lazy').setup {
     config = function()
       -- gruvbox config
       vim.g.gruvbox_flat_style = 'hard' -- hard | dark | undefined
-      vim.g.gruvbox_italic_keywords = 0
+      vim.g.gruvbox_italic_keywords = 1
       vim.g.gruvbox_transparent = 0
 
       -- vim.cmd.colorscheme '256_noir'
       vim.cmd.colorscheme 'gruvbox-flat'
-      vim.cmd.hi 'Comment gui=none ctermbg=none'
     end,
   },
   { -- Highlight todo, notes, etc in comments
@@ -735,6 +734,7 @@ require('lazy').setup {
     opts = {},
   },
   {
+    -- Global search and replace with <C-S>
     'nvim-pack/nvim-spectre',
     dependencies = {
       'nvim-lua/plenary.nvim',
