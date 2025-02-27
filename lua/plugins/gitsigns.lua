@@ -48,7 +48,7 @@ return {
         vim.keymap.set('n', '<leader>gS', gitsigns.stage_buffer, { desc = 'Stage Buffer', buffer = bufnr })
         vim.keymap.set('n', '<leader>gR', gitsigns.reset_buffer, { desc = 'Reset Buffer', buffer = bufnr })
         vim.keymap.set('n', '<leader>gb', function()
-          gitsigns.blame_line { full = true }
+          Snacks.git.blame_line()
         end, { desc = 'Show Full Blame Line' })
         vim.keymap.set('n', '<leader>gd', gitsigns.diffthis, { desc = 'Diff this', buffer = bufnr })
         vim.keymap.set({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')

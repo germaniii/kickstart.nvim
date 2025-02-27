@@ -1,4 +1,5 @@
 return {
+  'prettier/vim-prettier', -- prettier plugin used in SE project
   { -- Easy horizontal traversal
     'jinh0/eyeliner.nvim',
     config = function()

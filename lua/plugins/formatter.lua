@@ -1,4 +1,5 @@
 return {
+  'prettier/vim-prettier', -- prettier plugin used in SE project
   { -- Autoformat
     'stevearc/conform.nvim',
     opts = {
