@@ -45,7 +45,6 @@ return {
     },
     dependencies = { 'nvim-tree/nvim-web-devicons' },
   },
-
   {
     'ahmedkhalf/project.nvim',
     config = function()
