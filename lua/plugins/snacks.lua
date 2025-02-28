@@ -15,6 +15,7 @@ return {
       input = { enabled = true }, -- stylized input (rename file, etc.)
       git = { enabled = true }, -- stylized git blame
       rename = { enabled = true }, -- rename integration with oil.nvim found in autocmd.lua
+      picker = { enabled = true }, -- enable windows for sub menus like code action
       scratch = {
         enabled = true,
         name = 'Scratch Pad',
