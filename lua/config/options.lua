@@ -3,7 +3,7 @@ local globals = {
   -- Set <space> as the leader key
   -- See `:help mapleader`
   mapleader = ' ',
-  mallocalleader = ' ',
+  maplocalleader = ' ',
   loaded_netrw = 1,
   loaded_netrwPlugin = 1,
 }
