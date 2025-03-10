@@ -38,7 +38,7 @@ return {
         on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
       }
       vim.cmd.hi 'TreesitterContextLineNumberBottom gui=underline'
-      vim.keymap.set('n', 'gt', function()
+      vim.keymap.set({ 'n', 'v' }, 'gt', function()
         require('treesitter-context').go_to_context(vim.v.count1)
       end, { silent = true })
     end,
