@@ -31,12 +31,23 @@ return {
           end
         end,
       })
+
+      -- Shared Variable
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
       capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
+
+      -- LSP Specific Server Configs
       local servers = {
+        -- c
         clangd = {},
+        -- rust
         rust_analyzer = {},
+        -- python
+        basedpyright = {},
+        black = {},
+        ['blackd-client'] = {},
+        -- php
         phpactor = {
           init_options = {
             ['language_server_phpstan.enabled'] = true,
@@ -44,10 +55,8 @@ return {
             ['php_code_sniffer.enabled'] = true,
           },
         },
+        -- lua
         lua_ls = {
-          -- cmd = {...},
-          -- filetypes { ...},
-          -- capabilities = {},
           settings = {
             Lua = {
               runtime = { version = 'LuaJIT' },
@@ -68,10 +77,8 @@ return {
           },
         },
       }
-      require('mason').setup()
 
-      -- You can add other tools here that you want Mason to install
-      -- for you, so that they are available from within Neovim.
+      require('mason').setup()
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format lua code
@@ -81,9 +88,6 @@ return {
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
