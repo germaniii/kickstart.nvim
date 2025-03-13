@@ -16,6 +16,13 @@ return {
         auto_install = true,
         highlight = { enable = true },
         indent = { enable = true, disable = { 'tsx', 'jsx', 'ts' } },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            node_incremental = 'v',
+            node_decremental = 'V',
+          },
+        },
       }
     end,
   },
