@@ -44,7 +44,9 @@ return {
         -- rust
         rust_analyzer = {},
         -- python
-        basedpyright = {},
+        mypy = {},
+        ['python-lsp-server'] = {},
+        isort = {},
         black = {},
         ['blackd-client'] = {},
         -- php
