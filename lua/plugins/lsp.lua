@@ -41,7 +41,6 @@ return {
       local servers = {
         -- bash
         bashls = {},
-        shellcheck = {},
         -- docker
         dockerls = {},
         docker_compose_language_service = {},
