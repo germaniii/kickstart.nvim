@@ -39,6 +39,12 @@ return {
 
       -- LSP Specific Server Configs
       local servers = {
+        -- bash
+        bashls = {},
+        shellcheck = {},
+        -- docker
+        dockerls = {},
+        docker_compose_language_service = {},
         -- c
         clangd = {},
         -- rust
@@ -77,6 +83,28 @@ return {
               diagnostics = { disable = { 'missing-fields' } },
             },
           },
+        },
+        -- typescript
+        ts_ls = {
+          enabled = false,
+        },
+        vtsls = {
+          -- explicitly add default filetypes, so that we can extend
+          -- them in related extras
+          filetypes = {
+            'javascript',
+            'javascriptreact',
+            'javascript.jsx',
+            'typescript',
+            'typescriptreact',
+            'typescript.tsx',
+          },
+        },
+        eslint = {
+          flags = os.getenv 'DEBOUNCE_ESLINT' and {
+            allow_incremental_sync = false,
+            debounce_text_changes = 1000,
+          } or nil,
         },
       }
 

@@ -16,26 +16,11 @@ return {
       git = { enabled = true }, -- stylized git blame
       rename = { enabled = true }, -- rename integration with oil.nvim found in autocmd.lua
       picker = { enabled = true }, -- enable windows for sub menus like code action
-      scratch = {
-        enabled = true,
-        name = 'Scratch Pad',
-        icon = nil, -- `icon|{icon, icon_hl}`. defaults to the filetype icon
-        root = vim.fn.stdpath 'data' .. '/scratch',
-        autowrite = true, -- automatically write when the buffer is hidden
-        -- unique key for the scratch file is based on:
-        -- * name
-        -- * ft
-        -- * vim.v.count1 (useful for keymaps)
-        -- * cwd (optional)
-        -- * branch (optional)
-        filekey = {
-          name = 'scratch',
-          cwd = false, -- use current working directory
-          branch = false, -- use current branch name
-          count = false, -- use vim.v.count1
-        },
-        win = { style = 'scratch' },
-      },
+      util = { enabled = true },
+      notifier = { enabled = true },
+      notify = { enabled = true },
+      dim = { enabled = true },
+      animate = { enabled = true },
     },
     keys = {
       -- Top Pickers & Explorer
@@ -415,13 +400,13 @@ return {
       --   end,
       --   desc = 'Toggle Zoom',
       -- },
-      {
-        '<leader>.',
-        function()
-          Snacks.scratch()
-        end,
-        desc = 'Toggle Scratch Buffer',
-      },
+      -- {
+      --   '<leader>.',
+      --   function()
+      --     Snacks.scratch()
+      --   end,
+      --   desc = 'Toggle Scratch Buffer',
+      -- },
       -- {
       --   '<leader>S',
       --   function()
