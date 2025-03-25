@@ -99,6 +99,7 @@ return {
             'typescript.tsx',
           },
         },
+        eslint_d = {},
         eslint = {
           flags = os.getenv 'DEBOUNCE_ESLINT' and {
             allow_incremental_sync = false,

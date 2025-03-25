@@ -23,6 +23,8 @@ vim.api.nvim_create_user_command('Format', function(args) -- Add a 'Format' comm
       ['end'] = { args.line2, end_line:len() },
     }
   end
+
+  vim.cmd 'OrganizeImports'
   require('conform').format { async = true, lsp_fallback = true, range = range }
 end, { range = true })
 vim.api.nvim_create_user_command('FormatDisable', function(args) -- Add a toggle command to toggle formatting using conform.nvim
