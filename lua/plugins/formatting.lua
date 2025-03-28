@@ -1,5 +1,4 @@
 return {
-  'prettier/vim-prettier', -- prettier plugin used in SE project
   { -- Autoformat
     'stevearc/conform.nvim',
     opts = {
@@ -14,6 +13,25 @@ return {
       formatters_by_ft = {
         lua = { 'stylua' },
         python = { 'black' },
+        php = { 'php_cs_fixer' },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        json = { 'prettierd', 'prettier', stop_after_first = true },
+        html = { 'prettierd', 'prettier', stop_after_first = true },
+        css = { 'prettierd', 'prettier', stop_after_first = true },
+      },
+      formatter = {
+        ['php_cs_fixer'] = {
+          command = 'php-cs-fixer',
+          args = {
+            'fix',
+            '--rules=@PSR12', -- Formatting preset. Other presets are available, see the php-cs-fixer docs.
+            '$FILENAME',
+          },
+          stdin = false,
+        },
       },
     },
   },

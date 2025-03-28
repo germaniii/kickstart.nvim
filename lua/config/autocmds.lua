@@ -15,18 +15,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- [[ User Commands ]]
 --  This can be invoked by pressing `:` followed by the command
 vim.api.nvim_create_user_command('Format', function(args) -- Add a 'Format' command to use for manual formatting using conform.nvim
-  local range = nil
-  if args.count ~= -1 then
-    local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
-    range = {
-      start = { args.line1, 0 },
-      ['end'] = { args.line2, end_line:len() },
-    }
-  end
+  require('conform').format { async = true, lsp_fallback = true }
+end, {
+  desc = 'Format the current buffer',
+})
 
-  vim.cmd 'OrganizeImports'
-  require('conform').format { async = true, lsp_fallback = true, range = range }
-end, { range = true })
 vim.api.nvim_create_user_command('FormatDisable', function(args) -- Add a toggle command to toggle formatting using conform.nvim
   if args.bang then
     -- FormatDisable! will disable formatting just for this buffer
@@ -38,12 +31,14 @@ end, {
   desc = 'Disable autoformat-on-save',
   bang = true,
 })
+
 vim.api.nvim_create_user_command('FormatEnable', function() -- Add a toggle command to toggle formatting using conform.nvim
   vim.b.disable_autoformat = false
   vim.g.disable_autoformat = false
 end, {
   desc = 'Re-enable autoformat-on-save',
 })
+
 vim.api.nvim_create_user_command('OrganizeImports', function() -- Organize imports in typescript projects
   local params = {
     command = '_typescript.organizeImports',
