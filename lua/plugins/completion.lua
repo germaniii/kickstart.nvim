@@ -54,7 +54,7 @@ return {
       -- Default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'buffer' },
+        default = { 'lsp', 'buffer', 'snippets', 'path' },
         providers = {
           lsp = {
             min_keyword_length = 0, -- Number of characters to trigger porvider
@@ -78,7 +78,7 @@ return {
       -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
       --
       -- See the fuzzy documentation for more information
-      fuzzy = { implementation = 'prefer_rust_with_warning' },
+      fuzzy = { implementation = 'prefer_rust' },
       signature = {
         enabled = true,
       },

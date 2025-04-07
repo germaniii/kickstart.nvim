@@ -1,6 +1,7 @@
 return {
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
+    version = '*',
     dependencies = {
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
@@ -34,8 +35,14 @@ return {
 
       -- Shared Variable
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
-      capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
+      capabilities = vim.tbl_deep_extend('force', capabilities, require('blink.cmp').get_lsp_capabilities({}, false))
+      capabilities = vim.tbl_deep_extend('force', capabilities, {
+        workspace = {
+          didChangeWatchedFiles = {
+            dynamicRegistration = false,
+          },
+        },
+      })
 
       -- LSP Specific Server Configs
       local servers = {
@@ -49,8 +56,7 @@ return {
         -- rust
         rust_analyzer = {},
         -- python
-        mypy = {},
-        ['python-lsp-server'] = {},
+        pyright = {},
         isort = {},
         black = {},
         ['blackd-client'] = {},
@@ -84,21 +90,7 @@ return {
           },
         },
         -- typescript
-        ts_ls = {
-          enabled = false,
-        },
-        vtsls = {
-          -- explicitly add default filetypes, so that we can extend
-          -- them in related extras
-          filetypes = {
-            'javascript',
-            'javascriptreact',
-            'javascript.jsx',
-            'typescript',
-            'typescriptreact',
-            'typescript.tsx',
-          },
-        },
+        ts_ls = {},
         eslint_d = {},
         eslint = {
           flags = os.getenv 'DEBOUNCE_ESLINT' and {
@@ -111,8 +103,34 @@ return {
       require('mason').setup()
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format lua code
+        -- bash
+        'bashls',
+        -- python
+        'black',
+        'blackd-client',
+        'pyright',
+        'isort',
+        -- C
+        'clangd',
+        -- html/css
+        'cssls',
+        'css_variables',
+        'somesass_ls',
+        -- javascript
+        'eslint',
+        'eslint_d',
+        'prettier',
+        'prettierd',
+        'ts_ls',
+        -- lua
+        'lua_ls',
+        'stylua',
+        -- php
+        'phpactor',
+        -- rust
+        'rust_analyzer',
       })
+
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
       require('mason-lspconfig').setup {
         handlers = {
