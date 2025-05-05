@@ -3,7 +3,7 @@ return {
     'neovim/nvim-lspconfig',
     version = '*',
     dependencies = {
-      'williamboman/mason.nvim',
+      { 'williamboman/mason.nvim', opts = {} },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
     },
@@ -31,17 +31,6 @@ return {
             })
           end
         end,
-      })
-
-      -- Shared Variable
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend('force', capabilities, require('blink.cmp').get_lsp_capabilities({}, false))
-      capabilities = vim.tbl_deep_extend('force', capabilities, {
-        workspace = {
-          didChangeWatchedFiles = {
-            dynamicRegistration = false,
-          },
-        },
       })
 
       -- LSP Specific Server Configs
@@ -90,7 +79,6 @@ return {
           },
         },
         -- typescript
-        ts_ls = {},
         eslint_d = {},
         eslint = {
           flags = os.getenv 'DEBOUNCE_ESLINT' and {
@@ -98,38 +86,20 @@ return {
             debounce_text_changes = 1000,
           } or nil,
         },
+        vtsls = {},
       }
 
-      require('mason').setup()
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        -- bash
-        'bashls',
-        -- python
-        'black',
-        'blackd-client',
-        'pyright',
-        'isort',
-        -- C
-        'clangd',
-        -- html/css
-        'cssls',
-        'css_variables',
-        'somesass_ls',
-        -- javascript
-        'eslint',
-        'eslint_d',
-        'prettier',
-        'prettierd',
-        'ts_ls',
-        -- lua
-        'lua_ls',
-        'stylua',
-        -- php
-        'phpactor',
-        -- rust
-        'rust_analyzer',
+      -- Shared Variable
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities = vim.tbl_deep_extend('force', capabilities, {
+        workspace = {
+          didChangeWatchedFiles = {
+            dynamicRegistration = false,
+          },
+        },
       })
+
+      local ensure_installed = vim.tbl_keys(servers or {})
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
       require('mason-lspconfig').setup {
@@ -137,7 +107,8 @@ return {
           function(server_name)
             local server = servers[server_name] or {}
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            vim.lsp.config(server_name, server)
+            vim.lsp.enable(server_name)
           end,
         },
       }

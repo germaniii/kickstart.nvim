@@ -13,7 +13,6 @@ return {
       words = { enabled = true }, -- Auto-show LSP references and quickly navigate between them
       statuscolumn = { enabled = true }, -- Notifications / status / lower right
       input = { enabled = true }, -- stylized input (rename file, etc.)
-      git = { enabled = true }, -- stylized git blame
       rename = { enabled = true }, -- rename integration with oil.nvim found in autocmd.lua
       picker = { enabled = true }, -- enable windows for sub menus like code action
       util = { enabled = true },
@@ -21,6 +20,8 @@ return {
       notify = { enabled = true },
       dim = { enabled = true },
       animate = { enabled = true },
+      git = { enabled = false }, -- stylized git blame
+      scratch = { enabled = false },
     },
     keys = {
       -- Top Pickers & Explorer

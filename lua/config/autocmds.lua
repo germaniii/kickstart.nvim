@@ -39,17 +39,6 @@ end, {
   desc = 'Re-enable autoformat-on-save',
 })
 
-vim.api.nvim_create_user_command('OrganizeImports', function() -- Organize imports in typescript projects
-  local params = {
-    command = '_typescript.organizeImports',
-    arguments = { vim.api.nvim_buf_get_name(0) },
-    title = '',
-  }
-  vim.lsp.buf.execute_command(params)
-end, {
-  desc = 'Auto sort typescript imports',
-})
-
 vim.api.nvim_set_keymap('n', '<leader><leader>', '', {
   noremap = true,
   callback = function()
