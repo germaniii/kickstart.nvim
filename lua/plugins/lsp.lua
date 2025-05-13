@@ -91,13 +91,7 @@ return {
 
       -- Shared Variable
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend('force', capabilities, {
-        workspace = {
-          didChangeWatchedFiles = {
-            dynamicRegistration = false,
-          },
-        },
-      })
+      capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
 
       local ensure_installed = vim.tbl_keys(servers or {})
 
