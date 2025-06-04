@@ -14,7 +14,7 @@ end
 
 local opts = {
   number = true, -- Make line numbers default
-  relativenumber = true, -- You can also add relative line numbers, for help with jumping.
+  -- relativenumber = true, -- You can also add relative line numbers, for help with jumping.
   mouse = 'a', -- Enable mouse mode, can be useful for resizing splits for example!
   showmode = false, -- Don't show the mode, since it's already in status line
   clipboard = 'unnamedplus', -- Sync clipboard between OS and Neovim. Remove this option if you want your OS clipboard to remain independent.
