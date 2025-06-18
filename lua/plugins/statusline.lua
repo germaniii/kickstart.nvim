@@ -37,9 +37,9 @@ return {
       },
       sections = {
         lualine_a = { 'mode' },
-        lualine_b = { 'branch', 'diff', 'diagnostics' },
+        lualine_b = { 'diagnostics' }, -- 'branch', 'diff',
         lualine_c = { 'filename' },
-        lualine_x = { 'selectioncount', 'searchcount', 'encoding', 'fileformat', 'filetype' },
+        lualine_x = { 'selectioncount', 'searchcount' }, -- 'encoding', 'filetype', 'fileformat'
         lualine_y = { 'progress' },
         lualine_z = { 'location' },
       },
