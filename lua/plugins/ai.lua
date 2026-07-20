@@ -34,7 +34,7 @@ return {
       vim.o.autoread = true
       require('opencode').setup(opts)
 
-      vim.keymap.set('v', '<leader>or', function()
+      vim.keymap.set('v', '<leader>ol', function()
         local start_line = vim.fn.line("'<")
         local end_line = vim.fn.line("'>")
         local filename = vim.fn.expand('%')
