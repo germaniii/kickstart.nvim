@@ -33,6 +33,17 @@ return {
     config = function(_, opts)
       vim.o.autoread = true
       require('opencode').setup(opts)
+
+      vim.keymap.set('v', '<leader>or', function()
+        local start_line = vim.fn.line("'<")
+        local end_line = vim.fn.line("'>")
+        local filename = vim.fn.expand('%')
+        local reference = '@' .. filename .. ':L' .. start_line .. '-' .. end_line .. ' '
+        require('opencode.api').open_input()
+        vim.schedule(function()
+          vim.api.nvim_put({ reference }, 'c', true, true)
+        end)
+      end, { desc = 'Add visual selection as file line reference to opencode' })
     end,
   },
 }

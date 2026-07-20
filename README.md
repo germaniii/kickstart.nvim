@@ -126,6 +126,7 @@ Snippets via LuaSnip + friendly-snippets.
 | `<leader>o/` | Quick chat (selection context in visual mode) |
 | `<leader>oy` | Add visual selection to context |
 | `<leader>oY` | Insert visual selection inline in input |
+| `<leader>or` (visual) | Add visual selection as file line reference (e.g. `@filename:L15-L155`) |
 | `<leader>oR` | Rename current session |
 | `<leader>oz` | Toggle zoom |
 | `<leader>ov` | Paste image from clipboard |
