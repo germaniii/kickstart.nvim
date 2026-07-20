@@ -14,7 +14,17 @@ return {
       statuscolumn = { enabled = true }, -- Notifications / status / lower right
       input = { enabled = true }, -- stylized input (rename file, etc.)
       rename = { enabled = true }, -- rename integration with oil.nvim found in autocmd.lua
-      picker = { enabled = true }, -- enable windows for sub menus like code action
+      picker = {
+        enabled = true,
+        win = {
+          input = {
+            keys = {
+              ['<Up>'] = { 'history_back', mode = { 'i', 'n' } },
+              ['<Down>'] = { 'history_forward', mode = { 'i', 'n' } },
+            },
+          },
+        },
+      },
       util = { enabled = true },
       notifier = { enabled = true },
       notify = { enabled = true },
