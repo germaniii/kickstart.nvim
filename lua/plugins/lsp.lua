@@ -1,11 +1,11 @@
 return {
   { -- LSP: global setup (LspAttach, mason, capabilities)
     'neovim/nvim-lspconfig',
+    lazy = false,
     version = '*',
     dependencies = {
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
-      'WhoIsSethDaniel/mason-tool-installer.nvim',
     },
     config = function()
       vim.api.nvim_create_autocmd('LspAttach', {
@@ -32,21 +32,22 @@ return {
         end,
       })
 
+      require('mason').setup()
+
       local servers = {
         'bashls', 'clangd', 'dockerls', 'docker_compose_language_service',
         'eslint', 'groovyls', 'lua_ls', 'phpactor', 'pyright',
         'rust_analyzer', 'svelte', 'vtsls',
       }
 
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
-
-      require('mason').setup()
-      require('mason-tool-installer').setup { ensure_installed = servers }
       require('mason-lspconfig').setup {
         ensure_installed  = servers,
         automatic_enable  = { exclude = { 'eslint_d' } },
       }
+
+      for _, name in ipairs(servers) do
+        pcall(require, 'lsp.' .. name)
+      end
     end,
   },
 }
