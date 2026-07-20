@@ -41,11 +41,9 @@ return {
         -- Tier 1
         'terraformls', 'sqlls', 'yamlls', 'taplo', 'marksman',
         'buf_ls', 'prismals', 'graphql', 'ansiblels', 'nginx_language_server',
-        -- Tier 2
+        -- Tier 2 (requires dotnet SDK: 'csharp_ls', 'fsautocomplete')
         'gopls', 'ruby_lsp', 'sourcekit_lsp', 'jdtls', 'kotlin_lsp',
-        'metals', 'elixir_ls', 'csharp_ls', 'air',
-        -- Tier 3
-        'hls', 'ocamllsp', 'fsautocomplete', 'elp',
+        'metals', 'elixir_ls', 'air',
         'julials', 'elmls', 'clojure_lsp', 'dartls', 'zls', 'nim_langserver',
       }
 
