@@ -15,15 +15,6 @@ return {
         'typescript', 'javascript', 'ninja', 'rst',
       }
       require('nvim-treesitter').install(parsers)
-      vim.api.nvim_create_autocmd('FileType', {
-        group = vim.api.nvim_create_augroup('kickstart-treesitter', { clear = true }),
-        callback = function(args)
-          local lang = vim.treesitter.language.get_lang(args.match)
-          if lang and not pcall(vim.treesitter.start, args.buf, lang) then
-            vim.treesitter.start(args.buf, args.match)
-          end
-        end,
-      })
     end,
   },
   {
