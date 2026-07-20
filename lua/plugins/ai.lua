@@ -1,6 +1,6 @@
 return {
   {
-    'nickjvandyke/opencode.nvim',
+    'sudo-tee/opencode.nvim',
     version = '*', -- Latest stable release
     dependencies = {
       {
