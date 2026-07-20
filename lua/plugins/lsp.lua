@@ -38,6 +38,15 @@ return {
         'bashls', 'clangd', 'dockerls', 'docker_compose_language_service',
         'eslint', 'groovyls', 'lua_ls', 'phpactor', 'pyright',
         'rust_analyzer', 'svelte', 'vtsls',
+        -- Tier 1
+        'terraformls', 'sqlls', 'yamlls', 'taplo', 'marksman',
+        'buf_ls', 'prismals', 'graphql', 'ansiblels', 'nginx_language_server',
+        -- Tier 2
+        'gopls', 'ruby_lsp', 'sourcekit_lsp', 'jdtls', 'kotlin_lsp',
+        'metals', 'elixir_ls', 'csharp_ls', 'air',
+        -- Tier 3
+        'hls', 'ocamllsp', 'fsautocomplete', 'elp',
+        'julials', 'elmls', 'clojure_lsp', 'dartls', 'zls', 'nim_langserver',
       }
 
       require('mason-lspconfig').setup {
