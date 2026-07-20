@@ -3,7 +3,7 @@ return {
     'neovim/nvim-lspconfig',
     version = '*',
     dependencies = {
-      { 'williamboman/mason.nvim', opts = {} },
+      'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
     },
@@ -41,6 +41,7 @@ return {
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
 
+      require('mason').setup()
       require('mason-tool-installer').setup { ensure_installed = servers }
       require('mason-lspconfig').setup {
         ensure_installed  = servers,
