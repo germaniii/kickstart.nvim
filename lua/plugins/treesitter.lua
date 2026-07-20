@@ -1,63 +1,46 @@
 return {
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
-    config = function() -- This is the function that runs, AFTER loading
+    event = 'VimEnter',
+    config = function()
     end,
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
     build = ':TSUpdate',
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('nvim-treesitter.config').setup {
-        ensure_installed = {
-          'bash',
-          'c',
-          'html',
-          'lua',
-          'markdown',
-          'vim',
-          'vimdoc',
-          'php',
-          -- typescript
-          'typescript',
-          'javascript',
-          -- python
-          'ninja',
-          'rst',
-        },
-        -- Autoinstall languages that are not installed
-        auto_install = true,
-        highlight = { enable = true },
-        indent = { enable = true, disable = { 'tsx', 'jsx', 'ts' } },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            node_incremental = 'v',
-            node_decremental = 'V',
-          },
-        },
+      local parsers = {
+        'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'php',
+        'typescript', 'javascript', 'ninja', 'rst',
       }
+      require('nvim-treesitter').install(parsers)
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('kickstart-treesitter', { clear = true }),
+        callback = function(args)
+          local lang = vim.treesitter.language.get_lang(args.match)
+          if lang and not pcall(vim.treesitter.start, args.buf, lang) then
+            vim.treesitter.start(args.buf, args.match)
+          end
+        end,
+      })
     end,
   },
   {
     'nvim-treesitter/nvim-treesitter-context',
     config = function()
       require('treesitter-context').setup {
-        enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
-        multiwindow = false, -- Enable multiwindow support.
-        max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
-        min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+        enable = true,
+        multiwindow = false,
+        max_lines = 0,
+        min_window_height = 0,
         line_numbers = true,
-        multiline_threshold = 20, -- Maximum number of lines to show for a single context
-        trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
-        mode = 'cursor', -- Line used to calculate context. Choices: 'cursor', 'topline'
-        -- Separator between context and content. Should be a single character string, like '-'.
-        -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
+        multiline_threshold = 20,
+        trim_scope = 'outer',
+        mode = 'cursor',
         separator = nil,
-        zindex = 20, -- The Z-index of the context window
-        on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
+        zindex = 20,
+        on_attach = nil,
       }
       vim.cmd.hi 'TreesitterContextLineNumberBottom gui=underline'
       vim.keymap.set({ 'n', 'v' }, 'gt', function()
