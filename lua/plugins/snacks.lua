@@ -7,6 +7,7 @@ return {
     opts = {
       bigfile = { enabled = true }, -- auto disable plugins
       dashboard = { enabled = true }, -- nvim welcome screen
+      image = { enabled = true }, -- image viewer (kitty graphics protocol)
       indent = { enabled = true }, -- auto indent
       quickfile = { enabled = true }, -- faster loading files
       scope = { enabled = true }, -- indent lines
