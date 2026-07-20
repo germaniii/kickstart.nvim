@@ -106,13 +106,50 @@ Snippets via LuaSnip + friendly-snippets.
 
 | Key | Action |
 |---|---|
-| `<leader>oa` | Ask opencode |
-| `<leader>os` | Select opencode |
-| `<leader>ot` | Toggle opencode |
-| `<leader>ol` | Add range to opencode |
-| `goo` | Add line to opencode |
-| `<leader>ok` | Scroll opencode up |
-| `<leader>oj` | Scroll opencode down |
+| `<leader>og` | Toggle opencode (open/close) |
+| `<leader>oi` | Open input window (current session) |
+| `<leader>oI` | Open input window (new session) |
+| `<leader>oo` | Open output window |
+| `<leader>ot` | Toggle focus opencode / last window |
+| `<leader>oq` | Close UI windows |
+| `<leader>os` | Select and load a session |
+| `<leader>oT` | Timeline picker (navigate/undo/redo/fork) |
+| `<leader>op` | Configure provider and model |
+| `<leader>oV` | Configure model variant |
+| `<leader>od` | Open diff view |
+| `<leader>o]` | Next file diff |
+| `<leader>o[` | Previous file diff |
+| `<leader>oc` | Close diff view |
+| `<leader>ox` | Swap pane left/right |
+| `<leader>ott` | Toggle tool output (diffs, cmd output) |
+| `<leader>otr` | Toggle reasoning output (thinking steps) |
+| `<leader>o/` | Quick chat (selection context in visual mode) |
+| `<leader>oy` | Add visual selection to context |
+| `<leader>oY` | Insert visual selection inline in input |
+| `<leader>oR` | Rename current session |
+| `<leader>oz` | Toggle zoom |
+| `<leader>ov` | Paste image from clipboard |
+| `<leader>ora` | Revert all changes since last prompt |
+| `<leader>ort` | Revert this file since last prompt |
+| `<leader>orA` | Revert all changes since last session |
+| `<leader>orT` | Revert this file since last session |
+| `<leader>orr` | Restore file to restore point |
+| `<leader>orR` | Restore all files to restore point |
+| `<leader>oS` | Select child session |
+| `<leader>oP` | Select parent session |
+| `<leader>oB` | Select sibling session |
+| `<leader>oD` | Debug message |
+| `<leader>oO` | Debug output |
+| `<leader>ods` | Debug session |
+| `<leader>opa` | Accept permission (once) |
+| `<leader>opA` | Accept permission (always) |
+| `<leader>opd` | Deny permission |
+| `<M-m>` | Switch agent mode (build/plan) |
+| `<M-r>` | Cycle model variant |
+| `~` (input) | Pick file and add to context |
+| `@` (input) | Insert mention (file/agent) |
+| `/` (input) | Slash commands |
+| `#` (input) | Manage context items |
 
 ### Git (gitsigns.nvim)
 
