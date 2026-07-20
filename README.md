@@ -264,10 +264,58 @@ Languages installed: bash, c, html, lua, markdown, vim, vimdoc, php, typescript,
 
 `project.nvim` auto-detects project root via `.git`, `node_modules`, `vendor`, `package.json`. Auto-changes CWD on project entry.
 
+## Language Support
+
+All languages are "ready to go" — LSP, formatter, and linter will activate automatically when you open a matching file. Run `:Mason` to install the tools you need.
+
+| Language | LSP | Formatter | Linter |
+|---|---|---|---|
+| **Bash/Shell** | bashls | shfmt | shellcheck |
+| **C/C++** | clangd | clang-format | clang-tidy |
+| **Cap'n Proto / Protobuf** | buf_ls | buf | buf_lint |
+| **Clojure** | clojure_lsp | cljfmt | clj-kondo |
+| **C#** | csharp_ls | csharpier |  |
+| **CSS/SCSS/Less** | cssls | prettier | stylelint |
+| **Dart/Flutter** | dartls | dart_format |  |
+| **Docker** | dockerls | dockerfmt | hadolint |
+| **Docker Compose** | docker_compose_language_service | dockerfmt |  |
+| **Elixir** | elixir_ls | mix | credo |
+| **Elm** | elmls | elm_format | elm-review |
+| **Erlang** | elp | erlfmt | elvis |
+| **Fish** | fish_lsp | fish_indent | fish |
+| **Go** | gopls | goimports + gofmt/gofumpt | golangci-lint |
+| **GraphQL** | graphql | prettier |  |
+| **Groovy** | groovyls | npm-groovy-lint | npm-groovy-lint |
+| **Haskell** | hls | ormolu | hlint |
+| **HTML** | html | prettier |  |
+| **Java** | jdtls | google-java-format |  |
+| **JavaScript/TypeScript** | vtsls | prettierd / prettier | eslint |
+| **JSON** | jsonls | prettier |  |
+| **Julia** | julials | runic |  |
+| **Kotlin** | kotlin_lsp | ktfmt | ktlint |
+| **LaTeX** | texlab | latexindent | chktex |
+| **Lua** | lua_ls | stylua | luacheck |
+| **Markdown** | marksman | prettier | markdownlint |
+| **Nginx** | nginx_language_server | nginxfmt |  |
+| **Nim** | nim_langserver | nimpretty |  |
+| **OCaml** | ocamllsp | ocamlformat |  |
+| **PHP** | phpactor | php-cs-fixer | phpstan + phpcs |
+| **Prisma** | prismals | prisma_format | prisma-lint |
+| **Python** | pyright | ruff (organize imports + format) | ruff |
+| **R** | air | air | lintr |
+| **Ruby** | ruby_lsp | rubocop | rubocop |
+| **Rust** | rust_analyzer | rustfmt | clippy |
+| **Scala** | metals | scalafmt | scalafix |
+| **SQL** | sqlls | sqlfluff | sqlfluff |
+| **Svelte** | svelte | prettier | eslint |
+| **Swift** | sourcekit-lsp | swiftformat | swiftlint |
+| **Terraform** | terraformls | terraform_fmt | tflint |
+| **TOML** | taplo | taplo |  |
+| **Vue** | vue_ls | prettier | eslint |
+| **YAML** | yamlls | yamlfmt | yamllint |
+| **Zig** | zls | zigfmt |  |
+| **Zsh** | (bashls) | shfmt | shellcheck |
+
 ## Mason Tools
 
-LSP servers, linters, and formatters are installed via Mason. Run `:Mason` to manage them. The following are auto-installed:
-
-- **LSP**: bashls, clangd, dockerls, docker_compose_language_service, eslint, groovyls, lua_ls, phpactor, pyright, rust_analyzer, svelte, vtsls
-- **Formatters**: stylua, black, isort, php-cs-fixer, prettierd, prettier
-- **Linters**: fish (example; extend in `lua/plugins/lint.lua`)
+LSP servers, linters, and formatters are installed via Mason. Run `:Mason` to manage them.
