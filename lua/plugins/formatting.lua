@@ -24,7 +24,7 @@ return {
         css = { 'prettierd', 'prettier', stop_after_first = true },
         svelte = { 'prettier', stop_after_first = true },
       },
-      formatter = {
+      formatters = {
         ['php_cs_fixer'] = {
           command = 'php-cs-fixer',
           args = {
