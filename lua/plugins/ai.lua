@@ -26,13 +26,13 @@ return {
       },
       'MeanderingProgrammer/render-markdown.nvim',
     },
-    opts = {
-      keymap_prefix = '<leader>o',
-      default_global_keymaps = true,
-    },
-    config = function(_, opts)
+    config = function()
+      vim.g.opencode_opts = {
+        keymap_prefix = '<leader>o',
+        default_global_keymaps = true,
+      }
+
       vim.o.autoread = true
-      require('opencode').setup(opts)
 
       vim.keymap.set('v', '<leader>ol', function()
         local start_line = vim.fn.line("'<")

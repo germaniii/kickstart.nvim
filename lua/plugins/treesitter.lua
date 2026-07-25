@@ -10,11 +10,13 @@ return {
     branch = 'main',
     build = ':TSUpdate',
     config = function()
-      local parsers = {
-        'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'php',
-        'typescript', 'javascript', 'ninja', 'rst',
+      require('nvim-treesitter.configs').setup {
+        ensure_installed = {
+          'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'php',
+          'typescript', 'javascript', 'ninja', 'rst',
+        },
+        auto_install = true,
       }
-      require('nvim-treesitter').install(parsers)
     end,
   },
   {

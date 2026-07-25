@@ -34,27 +34,38 @@ return {
 
       require('mason').setup()
 
-      local servers = {
+      local mason_servers = {
         'bashls', 'clangd', 'dockerls', 'docker_compose_language_service',
-        'eslint', 'groovyls', 'lua_ls', 'phpactor', 'pyright',
+        'eslint', 'lua_ls', 'phpactor', 'pyright',
         'rust_analyzer', 'svelte', 'vtsls',
         -- Tier 1
         'terraformls', 'sqlls', 'yamlls', 'taplo', 'marksman',
         'buf_ls', 'prismals', 'graphql', 'ansiblels', 'nginx_language_server',
         -- Tier 2
-        'gopls', 'ruby_lsp', 'sourcekit_lsp', 'jdtls', 'kotlin_lsp',
-        'metals', 'elixir_ls', 'csharp_ls', 'air',
+        'gopls', 'ruby_lsp', 'jdtls', 'kotlin_lsp', 'elixirls',
+        -- 'csharp_ls', -- Windows-only (C#/.NET) — uncomment if needed
+        'air',
         -- Tier 3
-        'hls', 'ocamllsp', 'fsautocomplete', 'elp',
-        'julials', 'elmls', 'clojure_lsp', 'dartls', 'zls', 'nim_langserver',
+        'hls',
+        -- 'ocamllsp', -- requires OCaml compiler (opam switch) — uncomment if needed
+        -- 'fsautocomplete', -- Windows-only (F#/.NET) — uncomment if needed
+        'elp',
+        'julials', 'elmls', 'clojure_lsp', 'zls', 'nim_langserver',
       }
 
       require('mason-lspconfig').setup {
-        ensure_installed  = servers,
+        ensure_installed  = mason_servers,
         automatic_enable  = { exclude = { 'eslint_d' } },
       }
 
-      for _, name in ipairs(servers) do
+      -- Servers not available via mason (install manually if needed)
+      local manual_servers = {
+        'sourcekit_lsp',
+        'metals',
+        'dartls',
+      }
+
+      for _, name in ipairs(vim.list_extend(vim.deepcopy(mason_servers), manual_servers)) do
         pcall(require, 'lsp.' .. name)
       end
     end,
