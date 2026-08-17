@@ -6,65 +6,44 @@ return {
       completions = { blink = { enabled = true } },
     },
   },
-  -- {
-  --   -- this is a fork to support blink.cmp
-  --   'obsidian-nvim/obsidian.nvim',
-  --   version = '*', -- recommended, use latest release instead of latest commit
-  --   lazy = true,
-  --   ft = 'markdown',
-  --   -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
-  --   -- event = {
-  --   --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
-  --   --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/*.md"
-  --   --   -- refer to `:h file-pattern` for more examples
-  --   --   "BufReadPre path/to/my-vault/*.md",
-  --   --   "BufNewFile path/to/my-vault/*.md",
-  --   -- },
-  --   dependencies = {
-  --     -- Required.
-  --     'nvim-lua/plenary.nvim',
-  --
-  --     -- see below for full list of optional dependencies 👇
-  --   },
-  --   opts = {
-  --     ui = { enable = false },
-  --     completion = {
-  --       -- Enables completion using nvim_cmp
-  --       nvim_cmp = false,
-  --       -- Enables completion using blink.cmp
-  --       blink = true,
-  --       -- Trigger completion at 2 chars.
-  --       min_chars = 2,
-  --     },
-  --     workspaces = {
-  --       {
-  --         name = 'personal',
-  --         path = '~/vaults/personal/',
-  --       },
-  --     },
-  --     mappings = {
-  --       -- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
-  --       ['gd'] = {
-  --         action = function()
-  --           return require('obsidian').util.gf_passthrough()
-  --         end,
-  --         opts = { noremap = false, expr = true, buffer = true },
-  --       },
-  --       -- Toggle check-boxes.
-  --       ['<leader>ch'] = {
-  --         action = function()
-  --           return require('obsidian').util.toggle_checkbox()
-  --         end,
-  --         opts = { buffer = true },
-  --       },
-  --       -- Smart action depending on context, either follow link or toggle checkbox.
-  --       ['<cr>'] = {
-  --         action = function()
-  --           return require('obsidian').util.smart_action()
-  --         end,
-  --         opts = { buffer = true, expr = true },
-  --       },
-  --     },
-  --   },
-  -- },
+  {
+    '3rd/diagram.nvim',
+    dependencies = {
+      { '3rd/image.nvim', opts = {} }, -- you'd probably want to configure image.nvim manually instead of doing this
+    },
+    opts = { -- you can just pass {}, defaults below
+      events = {
+        render_buffer = { 'InsertLeave', 'BufWinEnter', 'TextChanged' },
+        clear_buffer = { 'BufLeave' },
+      },
+      renderer_options = {
+        mermaid = {
+          background = nil, -- nil | "transparent" | "white" | "#hex"
+          theme = nil, -- nil | "default" | "dark" | "forest" | "neutral"
+          scale = 1, -- nil | 1 (default) | 2  | 3 | ...
+          width = nil, -- nil | 800 | 400 | ...
+          height = nil, -- nil | 600 | 300 | ...
+          cli_args = nil, -- nil | { "--no-sandbox" } | { "-p", "/path/to/puppeteer" } | ...
+        },
+        plantuml = {
+          charset = nil,
+          cli_args = nil, -- nil | { "-Djava.awt.headless=true" } | ...
+        },
+        d2 = {
+          theme_id = nil,
+          dark_theme_id = nil,
+          scale = nil,
+          layout = nil,
+          sketch = nil,
+          cli_args = nil, -- nil | { "--pad", "0" } | ...
+        },
+        gnuplot = {
+          size = nil, -- nil | "800,600" | ...
+          font = nil, -- nil | "Arial,12" | ...
+          theme = nil, -- nil | "light" | "dark" | custom theme string
+          cli_args = nil, -- nil | { "-p" } | { "-c", "config.plt" } | ...
+        },
+      },
+    },
+  },
 }

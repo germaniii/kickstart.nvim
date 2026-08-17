@@ -2,18 +2,27 @@ return {
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter',
-    config = function()
-    end,
+    config = function() end,
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     branch = 'main',
     build = ':TSUpdate',
     config = function()
-      require('nvim-treesitter.configs').setup {
+      require('nvim-treesitter.config').setup {
         ensure_installed = {
-          'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'php',
-          'typescript', 'javascript', 'ninja', 'rst',
+          'bash',
+          'c',
+          'html',
+          'lua',
+          'markdown',
+          'vim',
+          'vimdoc',
+          'php',
+          'typescript',
+          'javascript',
+          'ninja',
+          'rst',
         },
         auto_install = true,
       }
